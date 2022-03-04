@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   useTheme,
@@ -15,9 +15,26 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+//-----redux and auth here
+import AuthGlobal from '../Context/store/AuthGlobal';
+import { logoutUser } from '../Context/actions/Auth.actions';
+
 export function DrawerContent(props) {
   //----this is the sidebar here
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  const context = useContext(AuthGlobal);
+  //console.log(context.stateUser.user);
+  //console.log(context.stateUser.user.name);
+  //console.log(context.stateUser.user.userId);
+
+  const logOut = () => {
+    //dispatch(onLogin(email, password));
+    //console.log(email);
+    //console.log(password);
+    logoutUser(context.dispatch);
+  };
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -35,7 +52,7 @@ export function DrawerContent(props) {
               />
 
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                <Title style={styles.title}>John Doe</Title>
+                <Title style={styles.title}>Akshay here</Title>
                 <Caption style={styles.caption}>@j_doe</Caption>
               </View>
             </View>
@@ -57,6 +74,41 @@ export function DrawerContent(props) {
             {/*----to show follower and following-- ------ends---*/}
           </View>
           {/*----shows the pic and user info------ends-------------------------------*/}
+
+          {/*----testing the auth and redux admin section here-----starts here*/}
+          {context.stateUser.user.isAdmin == true ? (
+            <Drawer.Section title="Admin section here" style={{marginTop:20}}>
+              <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="account-outline" color={color} size={size} />
+              )}
+              label="Create product"
+              onPress={() => {
+                props.navigation.navigate("createProduct");
+              }}
+            />
+             <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="account-outline" color={color} size={size} />
+              )}
+              label="Create catagory"
+              onPress={() => {
+                props.navigation.navigate("createCatagory");
+              }}
+            />
+             <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="account-outline" color={color} size={size} />
+              )}
+              label="user Analytics"
+              onPress={() => {
+                props.navigation.navigate("userAnalytics");
+              }}
+            />
+            </Drawer.Section>
+          ) : null}
+
+          {/*----testing the auth and redux admin section here-----ends here*/}
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItem //---this is one section here----
               icon={({ color, size }) => (
@@ -65,6 +117,15 @@ export function DrawerContent(props) {
               label="Home" //-----Home is name here--(refer MainTabScreen[line 24])
               onPress={() => {
                 props.navigation.navigate("Home");
+              }}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="account-outline" color={color} size={size} />
+              )}
+              label="Login"
+              onPress={() => {
+                props.navigation.navigate("Login");
               }}
             />
 
@@ -89,7 +150,7 @@ export function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="settings-outline" color={color} size={size} />
+                <Icon name="setting" color={color} size={size} />
               )}
               label="Settings"
               onPress={() => {
@@ -121,6 +182,20 @@ export function DrawerContent(props) {
               </View>
             </TouchableRipple>
           </Drawer.Section>
+
+          {/*----testing the auth and redux admin section here-----starts here*/}
+          {context.stateUser.user.isAdmin == true ? (
+            <Drawer.Section title="Admin section here">
+              <View style={styles.preference}>
+                <Text>Dark Theme</Text>
+                <View pointerEvents="none">
+                  <Text>Dark Theme</Text>
+                </View>
+              </View>
+            </Drawer.Section>
+          ) : null}
+
+          {/*----testing the auth and redux admin section here-----ends here*/}
         </View>
       </DrawerContentScrollView>
       {/*----main content goes here------starts---*/}
@@ -131,9 +206,7 @@ export function DrawerContent(props) {
             <Icon name="exit-to-app" color={color} size={size} />
           )}
           label="Sign Out"
-          onPress={() => {
-            signOut();
-          }}
+          onPress={logOut}
         />
       </Drawer.Section>
     </View>

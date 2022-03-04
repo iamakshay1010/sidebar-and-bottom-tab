@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useContext } from "react";
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';  //react-native-vector-icons
+//import Icon from 'react-native-vector-icons'; 
 
 import HomeScreen from './HomeScreen';
 import DetailsScreen from './DetailsScreen';
 import ExploreScreen from './ExploreScreen';
 import ProfileScreen from './ProfileScreen';
+import CreateProduct from "./CreateProduct";
+import createCatagory from "./createCatagory";
+import Login from './Login'
+
 
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
-const MainTabScreen = () => (
+//----redux and auth user part
+import AuthGlobal from "../Context/store/AuthGlobal";
+
+
+const MainTabScreen = ({navigation}) => (
+  
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="#fff"
+      style={{margin:6,borderRadius:20,}}
     >
       <Tab.Screen
         name="Home"
@@ -33,7 +44,7 @@ const MainTabScreen = () => (
       />
       <Tab.Screen
         name="Notifications"
-        component={DetailsScreen}
+        component={createCatagory}
         options={{
           tabBarLabel: 'Updates',
           tabBarColor: '#1f65ff',
@@ -42,9 +53,12 @@ const MainTabScreen = () => (
           ),
         }}
       />
+      {/*----implementing changes to see if admin access works*/}
+
+
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={CreateProduct}
         options={{
           tabBarLabel: 'Profile',
           tabBarColor: '#694fad',
@@ -53,6 +67,8 @@ const MainTabScreen = () => (
           ),
         }}
       />
+
+
       <Tab.Screen
         name="Explore"
         component={ExploreScreen}
@@ -61,6 +77,17 @@ const MainTabScreen = () => (
           tabBarColor: '#d02860',
           tabBarIcon: ({ color }) => (
             <Icon name="ios-aperture" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarLabel: 'Login',
+          tabBarColor: '#d02860',
+          tabBarIcon: ({ color }) => (
+            <Icon name="user" color={color} size={26} />
           ),
         }}
       />
